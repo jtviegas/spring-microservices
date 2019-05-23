@@ -1,0 +1,5 @@
+org.aprestos.labs.apis.springboot2.uri.store:
+  scheme: ${STORE_URI_SCHEME:http}
+  host: ${STORE_URI_HOST:localhost}
+  port: ${STORE_URI_PORT:7700}
+  path: ${STORE_URI_PATH:/store/task}

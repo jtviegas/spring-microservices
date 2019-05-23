@@ -1,0 +1,18 @@
+logging:
+  level:
+    root: INFO
+    org.hibernate:
+      SQL: INFO
+  file: store.log
+spring:
+  datasource:
+    username: sa
+    url: jdbc:hsqldb:mem:test
+    password: 
+    driver-class-name: org.hsqldb.jdbcDriver
+  jpa:
+    properties:
+      hibernate.dialect: org.hibernate.dialect.HSQLDialect
+      hibernate.show_sql: true
+    hibernate:
+      ddl-auto: create-drop

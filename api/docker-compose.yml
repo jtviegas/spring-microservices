@@ -1,0 +1,49 @@
+version: '2'
+services:
+  store:
+    image: caquicode/store-api:latest
+    container_name: store
+    environment:
+      - DEBUG_PORT=7600
+      - PORT=7700
+    ports:
+      - "7700:7700"
+      - "7600:7600"
+  solver:
+    image: caquicode/solver-api:latest
+    container_name: solver
+    environment:
+      - DEBUG_PORT=7605
+      - PORT=7705
+      - STORE_URI_HOST=store
+      - STORE_URI_PORT=7700
+      - STORE_URI_PATH=/store/task
+      - BLOCKING_COEFFICIENT=0.1
+    depends_on:
+      - store
+    links:
+      - "store:store"
+    ports:
+      - "7705:7705"
+      - "7605:7605"
+  api:
+    image: caquicode/api:latest
+    container_name: api
+    environment:
+      - DEBUG_PORT=7610
+      - PORT=7710
+      - STORE_URI_HOST=store
+      - STORE_URI_PORT=7700
+      - STORE_URI_PATH=/store/task
+      - SOLVER_URI_HOST=solver
+      - SOLVER_URI_PORT=7705
+      - SOLVER_URI_PATH=/solver
+    depends_on:
+      - store
+      - solver
+    links:
+      - "store:store"
+      - "solver:solver"
+    ports:
+      - "7710:7710"
+      - "7610:7610"
