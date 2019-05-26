@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: configserver
+  cloud:
+    config:
+      server:
+        git:
+          uri: ${CONFIG_REPOSITORY}
+          force-pull: true
+          searchPaths: configuration
+
+
+
+
+

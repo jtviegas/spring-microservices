@@ -45,3 +45,4 @@ git.properties
 .factorypath
 
 
+*.log.*.gz

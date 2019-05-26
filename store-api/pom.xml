@@ -237,7 +237,7 @@
 								</ports>
 								<env>
 									<PORT>7715</PORT>
-									<CONFIG_REPOSITORY>https://github.com/jtviegas/config-repo</CONFIG_REPOSITORY>
+									<CONFIG_REPOSITORY>https://github.com/jtviegas/spring-microservices</CONFIG_REPOSITORY>
 								</env>
 								<wait>
 									<log>Started Application in</log>
