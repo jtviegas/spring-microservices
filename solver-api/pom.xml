@@ -253,9 +253,30 @@
 					<registry>${dockerhub.registry}</registry>
 					<images>
 						<image>
+							<alias>config</alias>
+							<name>configserver:${project.parent.version}</name>
+							<run>
+								<ports>
+									<port>7715:7715</port>
+								</ports>
+								<env>
+									<PORT>7715</PORT>
+									<CONFIG_REPOSITORY>https://github.com/jtviegas/spring-microservices</CONFIG_REPOSITORY>
+								</env>
+								<wait>
+									<log>Started Application in</log>
+									<time>20000</time>
+								</wait>
+							</run>
+
+						</image>
+						<image>
 							<alias>store</alias>
 							<name>store-api:${project.parent.version}</name>
 							<run>
+								<dependsOn>
+									<container>config</container>
+								</dependsOn>
 								<ports>
 									<port>7700:7700</port>
 									<port>7600:7600</port>
@@ -263,11 +284,15 @@
 								<env>
 									<PORT>7700</PORT>
 									<DEBUG_PORT>7600</DEBUG_PORT>
+									<CONFIG_URI>http://config:7715</CONFIG_URI>
 								</env>
 								<wait>
 									<log>Started Boot in</log>
 									<time>20000</time>
 								</wait>
+								<links>
+									<link>config:config</link>
+								</links>
 							</run>
 
 						</image>
@@ -279,9 +304,11 @@
 							</build>
 							<run>
 								<dependsOn>
+									<container>config</container>
 									<container>store</container>
 								</dependsOn>
 								<links>
+									<link>config:config</link>
 									<link>store:store</link>
 								</links>
 								<ports>
@@ -295,6 +322,7 @@
 									<STORE_URI_PORT>7700</STORE_URI_PORT>
 									<STORE_URI_PATH>/store/task</STORE_URI_PATH>
 									<BLOCKING_COEFFICIENT>0.1</BLOCKING_COEFFICIENT>
+									<CONFIG_URI>http://config:7715</CONFIG_URI>
 								</env>
 								<wait>
 									<log>Started Boot in</log>
