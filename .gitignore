@@ -28,3 +28,4 @@ setenv.sh
 target
 
 
+*.log.*.gz
