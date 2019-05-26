@@ -250,7 +250,6 @@
 				<artifactId>docker-maven-plugin</artifactId>
 				<version>${fabric8.docker.maven.plugin.version}</version>
 				<configuration>
-
 					<registry>${dockerhub.registry}</registry>
 					<images>
 						<image>
@@ -329,6 +328,7 @@
 						</goals>
 					</execution>
 				</executions>
+
 			</plugin>
 		</plugins>
 	</build>

@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: store-api
+  cloud:
+    config:
+      uri: ${CONFIG_URI}
+      searchPaths: configuration
+
+
