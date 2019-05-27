@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>org.aprestos.labs.apis.springboot2</groupId>
+		<groupId>org.aprestos.labs.spring.microservices</groupId>
 		<artifactId>parent</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>../</relativePath>
@@ -39,6 +39,11 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 
+		<!-- ########## spring cloud stuff ########## -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
 
 		<!-- ########## spring stuff ########## -->
 		<dependency>
@@ -224,11 +229,50 @@
 					<registry>${dockerhub.registry}</registry>
 					<images>
 						<image>
+							<alias>config</alias>
+							<name>configserver:${project.parent.version}</name>
+							<run>
+								<ports>
+									<port>7715:7715</port>
+								</ports>
+								<env>
+									<PORT>7715</PORT>
+									<CONFIG_REPOSITORY>https://github.com/jtviegas/spring-microservices</CONFIG_REPOSITORY>
+								</env>
+								<wait>
+									<log>Started Application in</log>
+									<time>20000</time>
+								</wait>
+							</run>
+
+						</image>
+						<image>
+							<alias>store</alias>
 							<name>${project.artifactId}:${project.parent.version}</name>
 							<build>
 								<dockerFileDir>${project.basedir}</dockerFileDir>
 							</build>
-
+							<run>
+								<dependsOn>
+									<container>config</container>
+								</dependsOn>
+								<ports>
+									<port>7700:7700</port>
+									<port>7600:7600</port>
+								</ports>
+								<env>
+									<PORT>7700</PORT>
+									<DEBUG_PORT>7600</DEBUG_PORT>
+									<CONFIG_URI>http://config:7715</CONFIG_URI>
+								</env>
+								<links>
+									<link>config:config</link>
+								</links>
+								<wait>
+									<log>Started Boot in</log>
+									<time>20000</time>
+								</wait>
+							</run>
 						</image>
 					</images>
 					<authConfig>

@@ -26,6 +26,14 @@
 			<artifactId>model</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+
+		<!-- ########## spring cloud stuff ########## -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
+
+		<!-- ########## spring stuff ########## -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
@@ -229,9 +237,30 @@
 					<registry>${dockerhub.registry}</registry>
 					<images>
 						<image>
+							<alias>config</alias>
+							<name>configserver:${project.parent.version}</name>
+							<run>
+								<ports>
+									<port>7715:7715</port>
+								</ports>
+								<env>
+									<PORT>7715</PORT>
+									<CONFIG_REPOSITORY>https://github.com/jtviegas/spring-microservices</CONFIG_REPOSITORY>
+								</env>
+								<wait>
+									<log>Started Application in</log>
+									<time>20000</time>
+								</wait>
+							</run>
+
+						</image>
+						<image>
 							<alias>store</alias>
 							<name>store-api:${project.parent.version}</name>
 							<run>
+								<dependsOn>
+									<container>config</container>
+								</dependsOn>
 								<ports>
 									<port>7700:7700</port>
 									<port>7600:7600</port>
@@ -239,11 +268,15 @@
 								<env>
 									<PORT>7700</PORT>
 									<DEBUG_PORT>7600</DEBUG_PORT>
+									<CONFIG_URI>http://config:7715</CONFIG_URI>
 								</env>
 								<wait>
 									<log>Started Boot in</log>
 									<time>20000</time>
 								</wait>
+								<links>
+									<link>config:config</link>
+								</links>
 							</run>
 
 						</image>
@@ -252,10 +285,12 @@
 							<alias>solver</alias>
 							<run>
 								<dependsOn>
+									<container>config</container>
 									<container>store</container>
 								</dependsOn>
 								<links>
 									<link>store:store</link>
+									<link>config:config</link>
 								</links>
 								<ports>
 									<port>7705:7705</port>
@@ -268,6 +303,7 @@
 									<STORE_URI_PORT>7700</STORE_URI_PORT>
 									<STORE_URI_PATH>/store/task</STORE_URI_PATH>
 									<BLOCKING_COEFFICIENT>0.1</BLOCKING_COEFFICIENT>
+									<CONFIG_URI>http://config:7715</CONFIG_URI>
 								</env>
 								<wait>
 									<log>Started Boot in</log>
@@ -283,10 +319,12 @@
 							</build>
 							<run>
 								<dependsOn>
+									<container>config</container>
 									<container>store</container>
 									<container>solver</container>
 								</dependsOn>
 								<links>
+									<link>config:config</link>
 									<link>store:store</link>
 									<link>solver:solver</link>
 								</links>
@@ -303,6 +341,7 @@
 									<SOLVER_URI_HOST>solver</SOLVER_URI_HOST>
 									<SOLVER_URI_PORT>7705</SOLVER_URI_PORT>
 									<SOLVER_URI_PATH>/solver</SOLVER_URI_PATH>
+									<CONFIG_URI>http://config:7715</CONFIG_URI>
 								</env>
 								<wait>
 									<log>Started Boot in</log>

@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: solver-api
+  cloud:
+    config:
+      uri: ${CONFIG_URI}
+
+
+

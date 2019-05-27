@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: api
+  cloud:
+    config:
+      uri: ${CONFIG_URI}
+
+
+
+
+
