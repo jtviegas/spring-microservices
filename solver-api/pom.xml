@@ -39,6 +39,11 @@
 			<version>${project.parent.version}</version>
 		</dependency>
 
+		<!-- ########## spring cloud stuff ########## -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-config</artifactId>
+		</dependency>
 
 		<!-- ########## spring stuff ########## -->
 		<dependency>
