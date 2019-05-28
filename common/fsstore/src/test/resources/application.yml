@@ -1,0 +1,15 @@
+logging:
+  level:
+    root: INFO
+  file: store.log
+org:
+  aprestos:
+    labs:
+      spring:
+        microservices:
+          fsstore:
+            rootLocation: /var/tmp/
+            test:
+              medium-sized-file: /Users/jtviegas/Downloads/ideaIU-2018.3.4.dmg
+              big-sized-file: /Users/jtviegas/Downloads/kensu-training-00.ova
+

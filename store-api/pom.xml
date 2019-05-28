@@ -38,6 +38,11 @@
 			<artifactId>apiutils</artifactId>
 			<version>${project.parent.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.aprestos.labs.spring.microservices</groupId>
+			<artifactId>fsstore</artifactId>
+			<version>${project.parent.version}</version>
+		</dependency>
 
 		<!-- ########## spring cloud stuff ########## -->
 		<dependency>

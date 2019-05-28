@@ -19,6 +19,7 @@
 	<description>spring boot api project</description>
 
 	<modules>
+		<module>common/fsstore</module>
 		<module>configserver</module>
 		<module>common/build-tools</module>
 		<module>common/model</module>
