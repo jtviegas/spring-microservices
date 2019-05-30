@@ -64,6 +64,8 @@ public class FsStorageTests {
   @Test
   public void test_allfiles() throws IOException {
 
+    int initialSize = storageService.list().size();
+
     for( Path path: input ){
       log.info("testing storage of file {}", path.toString());
       File file = path.toFile();
@@ -72,7 +74,7 @@ public class FsStorageTests {
       Assert.assertTrue(format("failed to store and find file %s", file.getName()), found.isPresent());
     }
 
-    Assert.assertEquals(input.size(), storageService.list().size() );
+    Assert.assertEquals(input.size() + initialSize, storageService.list().size() );
     storageService.deleteAll();
     Assert.assertEquals(0, storageService.list().size());
 

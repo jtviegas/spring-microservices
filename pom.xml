@@ -53,9 +53,10 @@
 		<javax.json.version>1.1</javax.json.version>
 		<yasson.version>1.0</yasson.version>
 		<javaee.api.version>8.0</javaee.api.version>
-		<unirest.version>1.4.9</unirest.version>
+		<unirest.version>2.3.02</unirest.version>
 		<dockerhub.registry>registry.hub.docker.com/caquicode</dockerhub.registry>
 		<fabric8.docker.maven.plugin.version>0.30.0</fabric8.docker.maven.plugin.version>
+		<httpcomponents.httpclient.version>4.5.8</httpcomponents.httpclient.version>
 	</properties>
 
 
@@ -105,7 +106,7 @@
 
 			<!-- OTHER 3RD PARTY -->
 			<dependency>
-				<groupId>com.mashape.unirest</groupId>
+				<groupId>com.konghq</groupId>
 				<artifactId>unirest-java</artifactId>
 				<version>${unirest.version}</version>
 			</dependency>
@@ -155,6 +156,13 @@
 				<artifactId>commons-lang3</artifactId>
 				<version>${commons.lang3.version}</version>
 			</dependency>
+			<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>${httpcomponents.httpclient.version}</version>
+			</dependency>
+
 			<!-- TEST -->
 			<dependency>
 				<groupId>org.springframework.boot</groupId>

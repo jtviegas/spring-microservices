@@ -81,6 +81,10 @@
 		</dependency>
 		<!-- ########## third party stuff ########## -->
 		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 		</dependency>
@@ -170,7 +174,7 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.mashape.unirest</groupId>
+			<groupId>com.konghq</groupId>
 			<artifactId>unirest-java</artifactId>
 			<scope>test</scope>
 		</dependency>
@@ -293,7 +297,7 @@
 								</env>
 								<wait>
 									<log>Started Boot in</log>
-									<time>20000</time>
+									<time>30000</time>
 								</wait>
 								<links>
 									<link>config:config</link>
@@ -331,7 +335,7 @@
 								</env>
 								<wait>
 									<log>Started Boot in</log>
-									<time>20000</time>
+									<time>30000</time>
 								</wait>
 							</run>
 						</image>

@@ -1,9 +1,9 @@
 package org.aprestos.labs.spring.microservices.api.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.ObjectMapper;
-import com.mashape.unirest.http.Unirest;
+import kong.unirest.HttpResponse;
+import kong.unirest.ObjectMapper;
+import kong.unirest.Unirest;
 import lombok.extern.slf4j.Slf4j;
 import org.aprestos.labs.spring.microservices.model.dto.Problem;
 import org.aprestos.labs.spring.microservices.model.dto.Task;
@@ -54,7 +54,7 @@ public class ClientImpl implements Client {
 
     public ClientImpl(){
         log.trace("[ClientImpl|in]");
-        Unirest.setObjectMapper(new ObjectMapper() {
+        Unirest.config().setObjectMapper(new ObjectMapper() {
             public <T> T readValue(String value, Class<T> valueType) {
                 try {
                     return jsonMapper.readValue(value, valueType);

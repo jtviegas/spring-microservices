@@ -2,9 +2,9 @@ package org.aprestos.labs.spring.microservices.api.solver;
 
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.ObjectMapper;
-import com.mashape.unirest.http.Unirest;
+import kong.unirest.HttpResponse;
+import kong.unirest.ObjectMapper;
+import kong.unirest.Unirest;
 import org.aprestos.labs.spring.microservices.model.dto.Item;
 import org.aprestos.labs.spring.microservices.model.dto.Problem;
 import org.aprestos.labs.spring.microservices.model.dto.Solution;
@@ -37,7 +37,7 @@ public class SolverApiIntegrationTest {
 
 	@Before
 	public void init(){
-		Unirest.setObjectMapper(new ObjectMapper() {
+		Unirest.config().setObjectMapper(new ObjectMapper() {
 
 			public <T> T readValue(String value, Class<T> valueType) {
 				try {

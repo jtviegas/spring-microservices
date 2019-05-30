@@ -1,41 +1,44 @@
 package org.aprestos.labs.spring.microservices.fsstore;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Scope;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
-import org.springframework.util.StringUtils;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static java.lang.String.format;
+
 @Slf4j
 public class FsStorageService implements StorageService {
 
+  private static final String STORAGE_SERVICE_FOLDER = FsStorageService.class.getSimpleName();
   private Path rootLocation;
 
+
   public void init(String rootLocation){
+    log.trace("[init|in] ({})", rootLocation);
     try {
-      this.rootLocation = Paths.get(rootLocation);
+      this.rootLocation = Paths.get(rootLocation, STORAGE_SERVICE_FOLDER);
       if( ! this.rootLocation.toFile().exists() )
         Files.createDirectories(this.rootLocation);
+
+      log.info("[init] rootLocation initialized: {}", this.rootLocation);
+
     }
     catch (IOException e) {
       throw new StorageException("Could not initialize storage", e);
     }
+    log.trace("[init|out]");
   }
 
   private void verify(){
@@ -44,135 +47,98 @@ public class FsStorageService implements StorageService {
   }
 
   @Override
-  public void store(MultipartFile file) {
-    verify();
-    String filename = StringUtils.cleanPath(file.getOriginalFilename());
-    try {
-      if (file.isEmpty()) {
-        throw new StorageException("Failed to store empty file " + filename);
-      }
-      if (filename.contains("..")) {
-        // This is a security check
-        throw new StorageException(
-                "Cannot store file with relative path outside current directory "
-                        + filename);
-      }
-      try (InputStream inputStream = file.getInputStream()) {
-        Files.copy(inputStream, this.rootLocation.resolve(filename),
-                StandardCopyOption.REPLACE_EXISTING);
-      }
-    }
-    catch (IOException e) {
-      throw new StorageException("Failed to store file " + filename, e);
-    }
-  }
-
-  @Override
   public void store(InputStream input, String name) {
+    log.trace("[store|in] (name: {})", name);
     verify();
-    Path filePath = Paths.get(this.rootLocation.toFile().getAbsolutePath(), name );
+    Path filePath = this.rootLocation.resolve(Paths.get(this.rootLocation.toFile().getAbsolutePath(), name ) );
     try {
-      Files.copy(input, this.rootLocation.resolve(filePath), StandardCopyOption.REPLACE_EXISTING);
+      Files.copy(input, filePath, StandardCopyOption.REPLACE_EXISTING);
+      log.trace("[store] stored file {}", filePath.toString());
     }
     catch (IOException e) {
       throw new StorageException("Failed to store file " + filePath.toString(), e);
     }
-  }
-
-  @Override
-  public void store(Path path) {
-    verify();
-    File file = path.toFile();
-    String filename = StringUtils.cleanPath(file.getAbsolutePath());
-
-    try {
-      if (0l == file.length()) {
-        throw new StorageException("Failed to store empty file " + filename);
-      }
-      if (filename.contains("..")) {
-        // This is a security check
-        throw new StorageException(
-                "Cannot store file with relative path outside current directory "
-                        + filename);
-      }
-      try (InputStream inputStream = new FileInputStream(file)) {
-        Files.copy(inputStream, this.rootLocation.resolve(filename),
-                StandardCopyOption.REPLACE_EXISTING);
-      }
-    }
-    catch (IOException e) {
-      throw new StorageException("Failed to store file " + filename, e);
-    }
+    log.trace("[store|out]");
   }
 
   @Override
   public Set<String> list() {
+    log.trace("[list|in]");
     verify();
+    Set<String> result = null;
     try {
-      return Files.walk(this.rootLocation, 1)
+      if( this.rootLocation.toFile().exists() )
+      result = Files.walk(this.rootLocation, 1)
               .filter(path -> !path.equals(this.rootLocation))
-              .map(this.rootLocation::relativize).map(o -> o.toFile().getAbsolutePath()).collect(Collectors.toSet());
+              .map(o -> o.toFile().getAbsolutePath()).collect(Collectors.toSet());
+      else
+        result = new HashSet<>();
     }
     catch (IOException e) {
       throw new StorageException("Failed to read stored files", e);
     }
-
+    log.trace("[list|out] => {}", result);
+    return result;
   }
 
   @Override
   public Stream<Path> loadAll() {
+    log.trace("[loadAll|in]");
+    Stream<Path> result = null;
     verify();
     try {
-      return Files.walk(this.rootLocation, 1)
-              .filter(path -> !path.equals(this.rootLocation))
-              .map(this.rootLocation::relativize);
+      result = Files.walk(this.rootLocation, 1)
+              .filter(path -> !path.equals(this.rootLocation));
     }
     catch (IOException e) {
       throw new StorageException("Failed to read stored files", e);
     }
-
+    log.trace("[loadAll|out]");
+    return result;
   }
 
-  @Override
-  public Path load(String filename) {
+  public Path resolve(String filename) {
+    log.trace("[resolve|in] ({})", filename);
     verify();
-    return rootLocation.resolve(filename);
+    Path result = rootLocation.resolve(filename);
+    log.trace("[resolve|out] => {}", result);
+    return result;
   }
 
-  @Override
-  public Resource loadAsResource(String filename) {
+
+  public InputStream load(String filename) {
+    log.trace("[load|in] ({})", filename);
+    InputStream result = null;
     verify();
     try {
-      Path file = load(filename);
-      Resource resource = new UrlResource(file.toUri());
-      if (resource.exists() || resource.isReadable()) {
-        return resource;
-      }
-      else {
-        throw new StorageFileNotFoundException(
-                "Could not read file: " + filename);
-      }
+      result = new FileInputStream(resolve(filename).toFile());
+    } catch (FileNotFoundException e) {
+      throw new StorageFileNotFoundException(format("cannot find file: %s", filename), e);
     }
-    catch (MalformedURLException e) {
-      throw new StorageFileNotFoundException("Could not read file: " + filename, e);
-    }
+    log.trace("[load|out]");
+    return result;
   }
+
 
   public void delete( String name ){
+    log.trace("[delete|in] ({})", name);
     verify();
     try {
-      Path file = load(name);
+      Path file = resolve(name);
       Files.deleteIfExists(file);
     }
     catch (IOException e) {
       throw new StorageException("Failed to delete stored files", e);
     }
+    log.trace("[delete|out]");
   }
 
   @Override
   public void deleteAll() {
+    log.trace("[deleteAll|in]");
     verify();
     FileSystemUtils.deleteRecursively(rootLocation.toFile());
+    log.trace("[deleteAll|out]");
   }
 
 

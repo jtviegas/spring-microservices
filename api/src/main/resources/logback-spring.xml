@@ -7,6 +7,7 @@
 	<property name="FILE_LOG_PATTERN"
 		value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n" />
 	<property name="LOG_FILE_NAME" value="api" />
+	<property name="APP_PACKAGE" value="org.aprestos.labs.api" />
 
 	<appender name="FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
@@ -65,10 +66,9 @@
 			<appender-ref ref="STDOUT" />
 			<appender-ref ref="ASYNC-FILE" />
 		</root>
-		<logger name="org.aprestos.labs.api" additivity="true" level="trace">
+		<logger name="${APP_PACKAGE}" additivity="true" level="trace">
 			<appender-ref ref="ASYNC-TRACE-FILE" />
 		</logger>
-
 	</springProfile>
 
 	<springProfile name="prod">
@@ -76,7 +76,7 @@
 			<appender-ref ref="STDOUT" />
 			<appender-ref ref="ASYNC-FILE" />
 		</root>
-		<logger name="org.aprestos.labs.api" additivity="true" level="info">
+		<logger name="${APP_PACKAGE}" additivity="true" level="info">
 			<appender-ref ref="ASYNC-TRACE-FILE" />
 		</logger>
 	</springProfile>
