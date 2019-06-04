@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: config-service
+  labels:
+    run: config-service
+spec:
+  type: NodePort
+  ports:
+  - port: 7715
+    protocol: TCP
+  selector:
+    app: config
