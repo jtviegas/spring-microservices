@@ -241,30 +241,36 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>**/*IntegrationTest</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<excludes>
+								<exclude>none</exclude>
+							</excludes>
+							<includes>
+								<include>**/*IntegrationTest</include>
+							</includes>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>io.fabric8</groupId>
 				<artifactId>docker-maven-plugin</artifactId>
 				<version>${fabric8.docker.maven.plugin.version}</version>
 				<configuration>
 					<registry>${dockerhub.registry}</registry>
 					<images>
-						<image>
-							<alias>config</alias>
-							<name>configserver:${project.parent.version}</name>
-							<run>
-								<ports>
-									<port>7715:7715</port>
-								</ports>
-								<env>
-									<PORT>7715</PORT>
-									<CONFIG_REPOSITORY>https://github.com/jtviegas/spring-microservices</CONFIG_REPOSITORY>
-								</env>
-								<wait>
-									<log>Started Application in</log>
-									<time>20000</time>
-								</wait>
-							</run>
-
-						</image>
 						<image>
 							<alias>store</alias>
 							<name>${project.artifactId}:${project.parent.version}</name>
@@ -282,11 +288,8 @@
 								<env>
 									<PORT>7700</PORT>
 									<DEBUG_PORT>7600</DEBUG_PORT>
-									<CONFIG_URI>http://config:7715</CONFIG_URI>
+									<FSSTORE_ROOT_LOCATION>/var/tmp</FSSTORE_ROOT_LOCATION>
 								</env>
-								<links>
-									<link>config:config</link>
-								</links>
 								<wait>
 									<log>Started Boot in</log>
 									<time>20000</time>
@@ -305,13 +308,16 @@
 						<id>start</id>
 						<phase>pre-integration-test</phase>
 						<goals>
+							<goal>stop</goal>
 							<goal>build</goal>
+							<goal>start</goal>
 						</goals>
 					</execution>
 					<execution>
 						<id>push</id>
 						<phase>post-integration-test</phase>
 						<goals>
+							<goal>stop</goal>
 							<goal>push</goal>
 						</goals>
 					</execution>

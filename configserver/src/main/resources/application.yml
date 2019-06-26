@@ -1,7 +1,0 @@
-server:
-  port: ${PORT:7715}
-  
-endpoints:
-  restart:
-    enabled: true
-

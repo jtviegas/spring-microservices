@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: solver
+  namespace: local
+  labels:
+    app: solver
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: solver
+  template:
+    metadata:
+      labels:
+        app: solver
+    spec:
+      containers:
+      - name: solver
+        image: caquicode/solver-api:0.0.1-SNAPSHOT
+        resources:
+          limits:
+            memory: "1024Mi"
+            cpu: "1"
+          requests:
+            memory: "512Mi"
+            cpu: "0.5"
+        ports:
+        - containerPort: 7705
+        env:
+          - name: PORT
+            value: "7705"
+          - name: THREADPOOL_BLOCKING_COEFFICIENT
+            valueFrom:
+              configMapKeyRef:
+                name: configuration
+                key: SOLVER_THREADPOOL_BLOCKING_COEFFICIENT
+          - name: STORE_URI_SCHEME
+              valueFrom:
+                configMapKeyRef:
+                  name: configuration
+                  key: SOLVER_THREADPOOL_BLOCKING_COEFFICIENT
+

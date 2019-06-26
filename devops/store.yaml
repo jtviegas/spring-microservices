@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: store
-  namespace: springms
+  namespace: local
   labels:
     app: store
 spec:
@@ -16,16 +16,23 @@ spec:
         app: store
     spec:
       containers:
-        - name: store
-          image: caquicode/store-api:latest
-          ports:
-            - containerPort: 7700
-          livenessProbe:
-            httpGet:
-              path: /healthz
-              port: 8080
-              httpHeaders:
-                - name: X-Custom-Header
-                  value: Awesome
-            initialDelaySeconds: 3
-            periodSeconds: 3
+      - name: store
+        image: caquicode/store-api:0.0.1-SNAPSHOT
+        resources:
+          limits:
+            memory: "1024Mi"
+            cpu: "1"
+          requests:
+            memory: "512Mi"
+            cpu: "0.5"
+        ports:
+        - containerPort: 7700
+        env:
+        - name: PORT
+          value: "7700"
+        - name: FSSTORE_ROOT_LOCATION
+          valueFrom:
+            configMapKeyRef:
+              name: configuration
+              key: STORE_FSSTORE_ROOT_LOCATION
+

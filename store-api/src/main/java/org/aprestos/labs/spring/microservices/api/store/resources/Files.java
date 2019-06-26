@@ -15,12 +15,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
-import springfox.documentation.service.ApiListing;
 
 import javax.validation.constraints.NotNull;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,8 +40,8 @@ public class Files {
     @ApiOperation(value = "Used to post a file")
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "successful operation" ) })
-    public ResponseEntity<Void> postFile(@RequestBody MultipartFile file) throws ApiException {
-        log.trace("[postFile|in] => {}", file.getOriginalFilename());
+    public ResponseEntity<Void> postFile(@NotNull @RequestBody MultipartFile file) throws ApiException {
+        log.info("[postFile|in] => {}", file.getOriginalFilename());
         try {
             storageService.store(file.getInputStream(), StringUtils.cleanPath(file.getOriginalFilename()));
             return new ResponseEntity<>(HttpStatus.OK);

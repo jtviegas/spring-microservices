@@ -9,7 +9,7 @@ spring:
       hibernate.show_sql: false
     hibernate:
       ddl-auto: create-drop
-  http:
+  servlet:
     multipart:
       max-file-size: 2048MB
 org:

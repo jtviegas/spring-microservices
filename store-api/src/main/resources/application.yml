@@ -9,10 +9,13 @@ spring:
       hibernate.show_sql: false
     hibernate:
       ddl-auto: create-drop
+  servlet:
+    multipart:
+      max-file-size: 2048MB
 org:
   aprestos:
     labs:
       spring:
         microservices:
           fsstore:
-            rootLocation: /var/tmp/
+            rootLocation: ${FSSTORE_ROOT_LOCATION:/var/tmp}
