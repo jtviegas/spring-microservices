@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: store
-  namespace: local
   labels:
     app: store
 spec:
@@ -17,11 +16,11 @@ spec:
     spec:
       containers:
       - name: store
-        image: caquicode/store-api:0.0.1-SNAPSHOT
+        image: caquicode/store-api:latest
         resources:
           limits:
             memory: "1024Mi"
-            cpu: "1"
+            cpu: "0.5"
           requests:
             memory: "512Mi"
             cpu: "0.5"

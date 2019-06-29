@@ -75,6 +75,7 @@ public class SolverApiIntegrationTest {
 				.header("accept", "application/json")
 				.header("Content-Type", "application/json")
 				.routeParam("task-id", id).asObject(Task.class);
+		Assert.assertEquals(HttpStatus.OK.value(), response2.getStatus());
 		Assert.assertNotNull(response2.getBody().getSolution());
 		Solution solution = response2.getBody().getSolution();
 		Assert.assertEquals(2, solution.getItems().length);

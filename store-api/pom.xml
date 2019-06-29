@@ -46,10 +46,6 @@
 
 		<!-- ########## spring cloud stuff ########## -->
 		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-config</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 		</dependency>
@@ -278,9 +274,6 @@
 								<dockerFileDir>${project.basedir}</dockerFileDir>
 							</build>
 							<run>
-								<dependsOn>
-									<container>config</container>
-								</dependsOn>
 								<ports>
 									<port>7700:7700</port>
 									<port>7600:7600</port>

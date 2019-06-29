@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: solver
+  name: api
   labels:
-    app: solver
+    app: api
 spec:
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
-      app: solver
+      app: api
   template:
     metadata:
       labels:
-        app: solver
+        app: api
     spec:
       containers:
-      - name: solver
-        image: caquicode/solver-api:latest
+      - name: api
+        image: caquicode/api:latest
         resources:
           limits:
             memory: "1024Mi"
@@ -25,13 +25,13 @@ spec:
             memory: "512Mi"
             cpu: "0.5"
         ports:
-        - containerPort: 7705
+        - containerPort: 7710
         env:
           - name: GET_HOSTS_FROM
             value: dns
           - name: PORT
-            value: "7705"
-          - name: BLOCKING_COEFFICIENT
+            value: "7710"
+          - name: THREADPOOL_BLOCKING_COEFFICIENT
             valueFrom:
               configMapKeyRef:
                 name: configuration
@@ -56,3 +56,23 @@ spec:
               configMapKeyRef:
                 name: configuration
                 key: STORE_URI_PATH
+          - name: SOLVER_URI_SCHEME
+            valueFrom:
+              configMapKeyRef:
+                name: configuration
+                key: SOLVER_URI_SCHEME
+          - name: SOLVER_URI_HOST
+            valueFrom:
+              configMapKeyRef:
+                name: configuration
+                key: SOLVER_URI_HOST
+          - name: SOLVER_PORT
+            valueFrom:
+              configMapKeyRef:
+                name: configuration
+                key: SOLVER_PORT
+          - name: SOLVER_URI_PATH
+            valueFrom:
+              configMapKeyRef:
+                name: configuration
+                key: SOLVER_URI_PATH

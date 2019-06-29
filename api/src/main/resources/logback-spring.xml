@@ -7,7 +7,7 @@
 	<property name="FILE_LOG_PATTERN"
 		value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n" />
 	<property name="LOG_FILE_NAME" value="api" />
-	<property name="APP_PACKAGE" value="org.aprestos.labs.api" />
+	<property name="APP_PACKAGE" value="org.aprestos.labs.spring.microservices.api" />
 
 	<appender name="FILE"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">

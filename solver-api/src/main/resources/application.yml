@@ -4,7 +4,7 @@ spring:
   application:
     name: solver-api
 org.aprestos.labs.apis.springboot2.solver:
-  blocking-coefficient: ${THREADPOOL_BLOCKING_COEFFICIENT:0.0}
+  blocking-coefficient: ${BLOCKING_COEFFICIENT:0.0}
 org.aprestos.labs.apis.springboot2.uri.store:
   scheme: ${STORE_URI_SCHEME:http}
   host: ${STORE_URI_HOST:store}

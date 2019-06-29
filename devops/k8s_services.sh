@@ -17,8 +17,18 @@ STORE_NAME=store
 STORE_SVC=store-service
 STORE_SVC_SPEC=$this_folder/store-svc.yaml
 
-AZURE_SANDBOX_CLUSTER_NS=jtv009-sandbox-001
-AZURE_SANDBOX_CLUSTER_NS_SPEC=$this_folder/azure_sandbox_namespace.json
+SOLVER_DEPLOYMENT=$this_folder/solver.yaml
+SOLVER_NAME=solver
+SOLVER_SVC=solver-service
+SOLVER_SVC_SPEC=$this_folder/solver-svc.yaml
+
+API_DEPLOYMENT=$this_folder/api.yaml
+API_NAME=api
+API_SVC=api-service
+API_SVC_SPEC=$this_folder/api-svc.yaml
+
+LOCAL_NS=local
+AZURE_SANDBOX_NS=jtv009-sandbox-001
 
 # parameter check
 usage()
@@ -45,8 +55,8 @@ createService(){
         echo "...couldn't create service $__name !!!"
         __r=1
     else
-        kubectl get services
-        kubectl describe services/$__name
+        kubectl get services -n $__ns
+        kubectl describe services/$__name -n $__ns
         echo "...created service $__name !"
     fi
     return $__r
@@ -81,8 +91,8 @@ createDeployment(){
         echo "...couldn't create deployment $__name !!!"
         __r=1
     else
-        kubectl get deployments
-        kubectl describe deployments/$__name
+        kubectl get deployments -n $__ns
+        kubectl describe deployments/$__name -n $__ns
         echo "...created deployment $__name !"
     fi
     return $__r
@@ -245,17 +255,17 @@ undeploy_local()
     echo "undeploying locally..."
     local __r=0
 
-    deleteService $STORE_SVC $AZURE_SANDBOX_CLUSTER_NS
+    deleteService $STORE_SVC $LOCAL_NS
     if [ ! "$?" -eq "0"  -a "$__r" -eq "0" ]; then
         __r=1
     fi
 
-    deleteDeployment $STORE_NAME $AZURE_SANDBOX_CLUSTER_NS
+    deleteDeployment $STORE_NAME $LOCAL_NS
     if [ ! "$?" -eq "0"  -a "$__r" -eq "0" ]; then
         __r=1
     fi
 
-    deleteConfigmap $CONFIGMAP $AZURE_SANDBOX_CLUSTER_NS
+    deleteConfigmap $CONFIGMAP $LOCAL_NS
     if [ ! "$?" -eq "0"  -a "$__r" -eq "0" ]; then
         __r=1
     fi
@@ -265,7 +275,7 @@ undeploy_local()
         __r=1
     fi
 
-    deleteNamespace $AZURE_SANDBOX_CLUSTER_NS
+    deleteNamespace $LOCAL_NS
     if [ ! "$?" -eq "0"  -a "$__r" -eq "0" ]; then
         __r=1
     fi
@@ -279,26 +289,26 @@ deploy_local()
     echo "deploying locally..."
     local __r=0
 
-    createNamespace $AZURE_SANDBOX_CLUSTER_NS
+    createNamespace $LOCAL_NS
     __r=$?
 
     if [ "$__r" -eq "0" ]; then
-        setupContext $CONTEXT $AZURE_SANDBOX_CLUSTER_NS $CLUSTER $USER
+        setupContext $CONTEXT $LOCAL_NS $CLUSTER $USER
         __r=$?
     fi
 
     if [ "$__r" -eq "0" ]; then
-        createConfigmap $CONFIGMAP_SPEC $CONFIGMAP $AZURE_SANDBOX_CLUSTER_NS
+        createConfigmap $CONFIGMAP_SPEC $CONFIGMAP $LOCAL_NS
         __r=$?
     fi
 
     if [ "$__r" -eq "0" ]; then
-        createDeployment $STORE_DEPLOYMENT $AZURE_SANDBOX_CLUSTER_NS $STORE_NAME
+        createDeployment $STORE_DEPLOYMENT $LOCAL_NS $STORE_NAME
         __r=$?
     fi
 
     if [ "$__r" -eq "0" ]; then
-        createService $STORE_SVC_SPEC $AZURE_SANDBOX_CLUSTER_NS $STORE_SVC
+        createService $STORE_SVC_SPEC $LOCAL_NS $STORE_SVC
         __r=$?
     fi
 
@@ -311,7 +321,37 @@ undeploy_azure()
     echo "undeploying on azure..."
     local __r=0
 
-    deleteNamespace $AZURE_SANDBOX_CLUSTER_NS
+    deleteService $API_SVC $AZURE_SANDBOX_NS
+    if [ ! "$?" -eq "0"  -a "$__r" -eq "0" ]; then
+        __r=1
+    fi
+
+    deleteDeployment $API_NAME $AZURE_SANDBOX_NS
+    if [ ! "$?" -eq "0"  -a "$__r" -eq "0" ]; then
+        __r=1
+    fi
+
+    deleteService $SOLVER_SVC $AZURE_SANDBOX_NS
+    if [ ! "$?" -eq "0"  -a "$__r" -eq "0" ]; then
+        __r=1
+    fi
+
+    deleteDeployment $SOLVER_NAME $AZURE_SANDBOX_NS
+    if [ ! "$?" -eq "0"  -a "$__r" -eq "0" ]; then
+        __r=1
+    fi
+
+    deleteService $STORE_SVC $AZURE_SANDBOX_NS
+    if [ ! "$?" -eq "0"  -a "$__r" -eq "0" ]; then
+        __r=1
+    fi
+
+    deleteDeployment $STORE_NAME $AZURE_SANDBOX_NS
+    if [ ! "$?" -eq "0"  -a "$__r" -eq "0" ]; then
+        __r=1
+    fi
+
+    deleteConfigmap $CONFIGMAP $AZURE_SANDBOX_NS
     if [ ! "$?" -eq "0"  -a "$__r" -eq "0" ]; then
         __r=1
     fi
@@ -325,8 +365,46 @@ deploy_azure()
     echo "deploying on azure..."
     local __r=0
 
-    createNamespaceFromSpec $AZURE_SANDBOX_CLUSTER_NS $AZURE_SANDBOX_CLUSTER_NS_SPEC
-    __r=$?
+    kubectl get pods -n $AZURE_SANDBOX_NS
+    if [ ! "$?" -eq "0" ]; then
+        echo "...could not query the namespace !!!"
+        __r=1
+    fi
+
+    if [ "$__r" -eq "0" ]; then
+        createConfigmap $CONFIGMAP_SPEC $CONFIGMAP $AZURE_SANDBOX_NS
+        __r=$?
+    fi
+
+    if [ "$__r" -eq "0" ]; then
+        createDeployment $STORE_DEPLOYMENT $AZURE_SANDBOX_NS $STORE_NAME
+        __r=$?
+    fi
+
+    if [ "$__r" -eq "0" ]; then
+        createService $STORE_SVC_SPEC $AZURE_SANDBOX_NS $STORE_SVC
+        __r=$?
+    fi
+
+    if [ "$__r" -eq "0" ]; then
+        createDeployment $SOLVER_DEPLOYMENT $AZURE_SANDBOX_NS $SOLVER_NAME
+        __r=$?
+    fi
+
+    if [ "$__r" -eq "0" ]; then
+        createService $SOLVER_SVC_SPEC $AZURE_SANDBOX_NS $SOLVER_SVC
+        __r=$?
+    fi
+
+    if [ "$__r" -eq "0" ]; then
+        createDeployment $API_DEPLOYMENT $AZURE_SANDBOX_NS $API_NAME
+        __r=$?
+    fi
+
+    if [ "$__r" -eq "0" ]; then
+        createService $API_SVC_SPEC $AZURE_SANDBOX_NS $API_SVC
+        __r=$?
+    fi
 
     echo "...deploying on azure finished ($__r)"
     return $__r

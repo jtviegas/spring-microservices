@@ -1,14 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: store-service
+  name: solver-service
   labels:
-    run: store-service
+    run: solver-service
 spec:
   type: ClusterIP
   ports:
-  - port: 7700
+  - port: 7705
     protocol: TCP
-    targetPort: 7700
+    targetPort: 7705
   selector:
-    app: store
+    app: solver

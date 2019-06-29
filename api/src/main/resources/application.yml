@@ -3,17 +3,16 @@ server:
 spring:
   application:
     name: api
-org.aprestos.labs.apis.springboot2.api:
-  uris:
+org.aprestos.labs.apis.springboot2.uri:
     store:
       scheme: ${STORE_URI_SCHEME:http}
       host: ${STORE_URI_HOST:store}
-      port: ${STORE_URI_PORT:7700}
+      port: ${STORE_PORT:7700}
       path: ${STORE_URI_PATH:/store/task}
     solver:
       scheme: ${SOLVER_URI_SCHEME:http}
       host: ${SOLVER_URI_HOST:solver}
-      port: ${SOLVER_URI_PORT:7705}
+      port: ${SOLVER_PORT:7705}
       path: ${SOLVER_URI_PATH:/solver}
 
 

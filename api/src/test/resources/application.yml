@@ -3,8 +3,7 @@ server:
 spring:
   application:
     name: api
-org.aprestos.labs.apis.springboot2.api:
-  uris:
+org.aprestos.labs.apis.springboot2.uri:
     store:
       scheme: ${STORE_URI_SCHEME:http}
       host: ${STORE_URI_HOST:store}

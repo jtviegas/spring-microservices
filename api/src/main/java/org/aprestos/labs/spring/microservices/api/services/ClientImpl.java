@@ -26,22 +26,22 @@ public class ClientImpl implements Client {
     @Autowired
     private com.fasterxml.jackson.databind.ObjectMapper jsonMapper;
 
-    @Value("${org.aprestos.labs.apis.springboot2.api.uris.solver.scheme}")
+    @Value("${org.aprestos.labs.apis.springboot2.uri.solver.scheme}")
     private String solverScheme;
-    @Value("${org.aprestos.labs.apis.springboot2.api.uris.solver.host}")
+    @Value("${org.aprestos.labs.apis.springboot2.uri.solver.host}")
     private String solverHost;
-    @Value("${org.aprestos.labs.apis.springboot2.api.uris.solver.port}")
+    @Value("${org.aprestos.labs.apis.springboot2.uri.solver.port}")
     private String solverPort;
-    @Value("${org.aprestos.labs.apis.springboot2.api.uris.solver.path}")
+    @Value("${org.aprestos.labs.apis.springboot2.uri.solver.path}")
     private String solverPath;
 
-    @Value("${org.aprestos.labs.apis.springboot2.api.uris.store.scheme}")
+    @Value("${org.aprestos.labs.apis.springboot2.uri.store.scheme}")
     private String storeScheme;
-    @Value("${org.aprestos.labs.apis.springboot2.api.uris.store.host}")
+    @Value("${org.aprestos.labs.apis.springboot2.uri.store.host}")
     private String storeHost;
-    @Value("${org.aprestos.labs.apis.springboot2.api.uris.store.port}")
+    @Value("${org.aprestos.labs.apis.springboot2.uri.store.port}")
     private String storePort;
-    @Value("${org.aprestos.labs.apis.springboot2.api.uris.store.path}")
+    @Value("${org.aprestos.labs.apis.springboot2.uri.store.path}")
     private String storePath;
 
     private String getSolverEndpoint(){
