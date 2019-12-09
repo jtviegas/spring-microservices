@@ -20,6 +20,6 @@ org:
           fsstore:
             rootLocation: /var/tmp/
             test:
-              medium-sized-file: /Users/jtviegas/Downloads/ideaIU-2018.3.4.dmg
-              big-sized-file: /Users/jtviegas/Downloads/kensu-training-00.ova
+              medium-sized-file: "/Users/jtviegas/Downloads/Firefox_68.0.1.dmg"
+              big-sized-file: "/Users/jtviegas/Downloads/codepit-master.zip"
 

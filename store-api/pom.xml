@@ -77,6 +77,10 @@
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 			<!--<scope>provided</scope>-->
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
 		<!-- ########## DB stuff ########## -->
 		<dependency>
 			<groupId>org.hsqldb</groupId>
@@ -310,8 +314,14 @@
 						<id>push</id>
 						<phase>post-integration-test</phase>
 						<goals>
-							<goal>stop</goal>
 							<goal>push</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>stop</id>
+						<phase>verify</phase>
+						<goals>
+							<goal>stop</goal>
 						</goals>
 					</execution>
 				</executions>

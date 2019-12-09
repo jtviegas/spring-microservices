@@ -132,11 +132,9 @@ public class StoreIntegrationTest {
 		int storeSize = list.size();
 
 		for( Path path: input ){
+
 			log.info("testing storage of file {}", path.toString());
 			File file = path.toFile();
-			ClassPathResource resource = new ClassPathResource(file.getAbsolutePath(), getClass());
-			MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
-			map.add("file", resource);
 
 			HttpResponse<Void> response = Unirest.post(STORE_ENDPOINT)
 					.field("file", file).asEmpty();
@@ -146,15 +144,12 @@ public class StoreIntegrationTest {
 
 			Optional<File> response2 = Unirest.get(STORE_ENDPOINT_SINGULAR)
 					.routeParam("filename", file.getName())
-					.asObject(new ResourceReader(tmpFile) ).getBody();
-
+					.asObject( new ResourceReader(tmpFile) ).getBody();
 			Assert.assertTrue(response2.isPresent());
-			response2.get().delete();
 
 			HttpResponse<JsonNode> response3 = Unirest.delete(STORE_ENDPOINT_SINGULAR)
-					.routeParam("filename", file.getName()).asJson();
+					.routeParam("filename", response2.get().getName()).asJson();
 			Assert.assertEquals(HttpStatus.OK.value(), response3.getStatus());
-
 		}
 
 		list = jsonMapper.readValue(Unirest.get(STORE_ENDPOINT)

@@ -16,6 +16,10 @@ spec:
     spec:
       containers:
       - name: store
+        livelinessProbe:
+          httpGet:
+            path: /actuator/health
+          initialDelaySeconds: 60
         image: caquicode/store-api:latest
         resources:
           limits:

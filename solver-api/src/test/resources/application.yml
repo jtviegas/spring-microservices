@@ -8,5 +8,5 @@ org.aprestos.labs.apis.springboot2.solver:
 org.aprestos.labs.apis.springboot2.uri.store:
   scheme: ${STORE_URI_SCHEME:http}
   host: ${STORE_URI_HOST:store}
-  port: ${STORE_URI_PORT:7700}
+  port: ${STORE_URI_PORT:#{null}}
   path: ${STORE_URI_PATH:/store/task}

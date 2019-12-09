@@ -17,6 +17,10 @@ spec:
       containers:
       - name: api
         image: caquicode/api:latest
+        livelinessProbe:
+          httpGet:
+            path: /actuator/health
+          initialDelaySeconds: 60
         resources:
           limits:
             memory: "1024Mi"

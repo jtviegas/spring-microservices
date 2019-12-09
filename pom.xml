@@ -19,8 +19,8 @@
 	<description>spring boot api project</description>
 
 	<modules>
-		<module>common/fsstore</module>
 		<module>common/build-tools</module>
+		<module>common/fsstore</module>
 		<module>common/model</module>
 		<module>common/test-tools</module>
         <module>common/state-manager</module>
@@ -155,7 +155,6 @@
 				<artifactId>commons-lang3</artifactId>
 				<version>${commons.lang3.version}</version>
 			</dependency>
-			<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
 			<dependency>
 				<groupId>org.apache.httpcomponents</groupId>
 				<artifactId>httpclient</artifactId>
@@ -198,7 +197,7 @@
 					<version>${maven.pmd.plugin.version}</version>
 					<dependencies>
 						<dependency>
-							<groupId>org.aprestos.labs.apis.springboot2</groupId>
+							<groupId>org.aprestos.labs.spring.microservices</groupId>
 							<artifactId>build-tools</artifactId>
 							<version>${project.version}</version>
 						</dependency>
