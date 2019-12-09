@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: store
+  labels:
+    app: store
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: store
+  template:
+    metadata:
+      labels:
+        app: store
+    spec:
+      containers:
+      - name: store
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 7700
+          initialDelaySeconds: 60
+        image: caquicode/store-api:latest
+        resources:
+          limits:
+            memory: "1024Mi"
+            #cpu: "0.5"
+          requests:
+            memory: "512Mi"
+            #cpu: "0.5"
+        ports:
+        - containerPort: 7700
+        env:
+        - name: PORT
+          value: "7700"
+
+

@@ -37,19 +37,6 @@ EOM
 
 
 
-
-install()
-{
-    local __r=0
-    if [ "$1" == "azure" ];then
-        install_azure
-    else
-	    install_local
-	fi
-	_r=$?
-    return $__r
-}
-
 install_azure()
 {
     echo "installing azure cluster config..."
