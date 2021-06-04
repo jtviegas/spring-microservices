@@ -56,7 +56,7 @@
 		<unirest.version>2.3.02</unirest.version>
 		<dockerhub.registry>registry.hub.docker.com/caquicode</dockerhub.registry>
 		<fabric8.docker.maven.plugin.version>0.30.0</fabric8.docker.maven.plugin.version>
-		<httpcomponents.httpclient.version>4.5.8</httpcomponents.httpclient.version>
+		<httpcomponents.httpclient.version>4.5.13</httpcomponents.httpclient.version>
 	</properties>
 
 
